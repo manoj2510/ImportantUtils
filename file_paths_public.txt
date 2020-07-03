@@ -1,4 +1,4 @@
-Create xml folder under res: file_paths_public.xml
+Create a folder "xml" under "res" and in that create: file_paths_public.xml as below
 
 <?xml version="1.0" encoding="utf-8"?>
 <paths>

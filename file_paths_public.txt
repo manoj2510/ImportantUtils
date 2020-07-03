@@ -1,0 +1,10 @@
+Create xml folder under res: file_paths_public.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!--Don't change the file. Please change the string resources if changed.-->
+    
+    <external-path
+        name="external_files"
+        path="."/>
+</paths>

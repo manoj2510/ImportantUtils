@@ -1,0 +1,11 @@
+Inside application tag of manifest, add below:
+
+<provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="org.mindtree.application.android.ie.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths_public" />
+        </provider>

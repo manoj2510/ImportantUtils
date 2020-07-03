@@ -1,0 +1,75 @@
+public class LogsToSD {
+    private Context context;
+    public static final String BASE_PATH = Environment
+            .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+    public static final String SEPERATOR = "/";
+    private static final String LOG_DATE_SEPERATOR = " : ";
+    private static final String LOG_SEPERATOR = " --> ";
+    private File logFile;
+    public static final String LOG_FILE_NAME = "igc_log";
+    String username="crash_logs";
+
+    public LogsToSD(Context context){
+        this.context = context;
+        createLogFile();
+    }
+
+    public void createLogFile(){
+        Log.e("UserName log file->", username);
+        String userFolderPath = BASE_PATH + SEPERATOR+context.getString(R.string.app_name)+SEPERATOR+username;
+        File userFolder = new File(userFolderPath);
+        Log.e("Log Directory-->", userFolderPath);
+        String fileName = "";
+        if(!userFolder.exists()){
+            userFolder.mkdirs();
+        }/*else{
+            int count = userFolder.list().length - 1;
+            fileName = userFolderPath + SEPERATOR + "app" + count + ".log";
+        }*/
+        fileName = userFolderPath + SEPERATOR + "Registration_App.log";
+        logFile = createFile(fileName);
+        double fileKB = logFile.length()/1024;
+        double fileSizeInMB = fileKB/1024;
+        System.out.println("###################------------------   "+fileKB);
+        System.out.println("###################------------------   "+fileSizeInMB);
+        if(fileSizeInMB > 5){
+            int newCount = userFolder.list().length;
+            String fileNameNew = userFolderPath + SEPERATOR + "app" + newCount + ".log";
+            logFile = createFile(fileNameNew);
+        }
+    }
+
+    public File createFile(String path){
+        File file = new File(path);
+        if (!file.exists()){
+            try{
+                file.createNewFile();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return file;
+    }
+
+    public void appendLog(String operation, String text){
+        String appName = context.getClass().getSimpleName();
+        SimpleDateFormat simpleDateFormatLogs = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        String date = simpleDateFormatLogs.format(new Date());
+        String methodName = "";
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+
+        Log.d("LogsToSD", "#########     " + ste[3].getMethodName());
+        methodName =  ste[3].getMethodName();
+        String finalLogString = date + LOG_DATE_SEPERATOR + appName + LOG_SEPERATOR +
+                methodName + LOG_SEPERATOR + operation + "      " + text;
+
+        try{
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(logFile, true));
+            bufferedWriter.append(finalLogString);
+            bufferedWriter.newLine();
+            bufferedWriter.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+}
